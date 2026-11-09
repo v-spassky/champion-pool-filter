@@ -1,0 +1,13 @@
+.cpf-hidden {
+  display: none !important;
+}
+
+.cpf-dimmed {
+  opacity: 0.25 !important;
+  filter: grayscale(1);
+  transition: opacity 0.15s;
+}
+
+.cpf-dimmed:hover {
+  opacity: 0.7 !important;
+}

@@ -1,0 +1,68 @@
+{
+  "manifest_version": 3,
+  "name": "Champion Pool Filter",
+  "version": "1.0.0",
+  "description": "Hides champions you don't play from counter lists on LoL stats sites.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "champion-pool-filter@local",
+      "strict_min_version": "142.0",
+      "data_collection_permissions": { "required": ["none"] }
+    }
+  },
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://ddragon.leagueoflegends.com/*",
+    "https://u.gg/*",
+    "https://op.gg/*",
+    "https://*.op.gg/*",
+    "https://mobalytics.gg/*",
+    "https://lolalytics.com/*",
+    "https://blitz.gg/*",
+    "https://www.leagueofgraphs.com/*",
+    "https://www.counterstats.net/*"
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "Champion Pool Filter",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://u.gg/*",
+        "https://op.gg/*",
+        "https://*.op.gg/*",
+        "https://mobalytics.gg/*",
+        "https://lolalytics.com/*",
+        "https://blitz.gg/*",
+        "https://www.leagueofgraphs.com/*",
+        "https://www.counterstats.net/*"
+      ],
+      "js": [
+        "src/core/namespace.js",
+        "src/core/champions.js",
+        "src/core/settings.js",
+        "src/sites/registry.js",
+        "src/sites/ugg.js",
+        "src/sites/blitz.js",
+        "src/sites/counterstats.js",
+        "src/sites/lolalytics.js",
+        "src/sites/heuristic-sites.js",
+        "src/content/filter.js"
+      ],
+      "css": ["src/content/filter.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

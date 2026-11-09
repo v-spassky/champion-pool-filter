@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Champion Pool Filter</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <h1><img class="logo" src="../../icons/icon32.png" alt="" />Champion pool</h1>
+      <label class="switch" title="Enable filtering">
+        <input type="checkbox" id="enabled" />
+        <span></span>
+      </label>
+    </header>
+
+    <!-- Shown when the browser hasn't granted access to the stats sites (common on Firefox). -->
+    <div id="access" class="banner" hidden>
+      <p>The extension needs your permission to run on the stats sites.</p>
+      <button id="grant" type="button">Allow on supported sites</button>
+    </div>
+    <p id="granted" class="banner banner--ok" hidden>Access granted. Reload any open stats pages.</p>
+
+    <section>
+      <div class="search">
+        <input id="search" type="text" placeholder="Add a champion…" autocomplete="off" />
+        <ul id="suggestions" hidden></ul>
+      </div>
+      <div class="pool-header">
+        <span id="pool-count">0 champions</span>
+        <button id="clear" class="link">Clear</button>
+      </div>
+      <ul id="pool"></ul>
+      <p id="empty" class="hint">Your pool is empty — nothing is filtered.</p>
+    </section>
+
+    <section>
+      <h2>Non-pool champions</h2>
+      <div class="segmented">
+        <label><input type="radio" name="mode" value="hide" /> Hide</label>
+        <label><input type="radio" name="mode" value="dim" /> Dim</label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Sites</h2>
+      <ul id="sites"></ul>
+    </section>
+
+    <!-- Same load order as the content scripts; add new site adapters here too. -->
+    <script src="../core/namespace.js"></script>
+    <script src="../core/champions.js"></script>
+    <script src="../core/settings.js"></script>
+    <script src="../sites/registry.js"></script>
+    <script src="../sites/ugg.js"></script>
+    <script src="../sites/blitz.js"></script>
+    <script src="../sites/counterstats.js"></script>
+    <script src="../sites/lolalytics.js"></script>
+    <script src="../sites/heuristic-sites.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

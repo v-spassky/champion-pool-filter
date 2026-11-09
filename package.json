@@ -1,0 +1,26 @@
+{
+  "name": "champion-pool-filter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Browser extension that hides champions outside your pool from counter lists on LoL stats sites.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint": "npm run lint:js && npm run lint:format && npm run lint:ext",
+    "lint:js": "eslint --max-warnings=0 .",
+    "lint:format": "prettier --check .",
+    "lint:ext": "web-ext lint --source-dir . --warnings-as-errors",
+    "fix": "eslint --fix . && prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.14.0",
+    "eslint-plugin-unicorn": "79.0.0",
+    "globals": "17.14.0",
+    "prettier": "3.9.10",
+    "web-ext": "10.8.0"
+  }
+}
