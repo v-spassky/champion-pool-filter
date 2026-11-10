@@ -7,5 +7,6 @@ export default {
     "prettier.config.js",
     "web-ext-config.mjs",
     "README.md",
+    "docs",
   ],
 };

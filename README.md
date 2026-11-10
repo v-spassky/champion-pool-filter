@@ -3,6 +3,8 @@
 Browser extension (Chrome / Edge / Firefox, Manifest V3) that hides champions outside your pool from counter lists on
 LoL stats sites.
 
+![The extension popup: champion pool, Hide/Dim mode and per-site toggles](docs/popup.png)
+
 ## Supported sites
 
 | Site             | Pages                                                   | Adapter                          |
@@ -58,6 +60,7 @@ src/sites/*.js          one adapter per site; heuristic-sites.js holds the heuri
 src/content/filter.js   site-agnostic engine (applies filter, watches DOM / SPA navigation)
 src/popup/              settings UI
 icons/                  extension icons (16/32/48/128 px)
+docs/                   README images (not packaged)
 ```
 
 ## Adding a new site
