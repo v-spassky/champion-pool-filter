@@ -29,15 +29,14 @@
   const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
   const CACHE_VERSION = 2; // bump when the cached champion shape changes
 
-  // Returns [{ key, name, id, num, icon }] sorted by name.
-  //   id:  Data Dragon id, e.g. "MonkeyKing" (used in many image URLs)
-  //   num: Riot numeric id, e.g. "62" (used in some image URLs)
   async function fetchJson(url) {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`);
     return response.json();
   }
 
+  // Returns [{ key, name, id, icon }] sorted by name.
+  //   id: Data Dragon id, e.g. "MonkeyKing"
   async function loadCatalog() {
     const stored = await chrome.storage.local.get(CACHE_KEY);
     const cached = stored[CACHE_KEY];
@@ -53,7 +52,6 @@
           key: championKey(c.name),
           name: c.name,
           id: c.id,
-          num: c.key,
           icon: `https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${c.image.full}`,
         }))
         .toSorted((a, b) => a.name.localeCompare(b.name));
@@ -68,27 +66,15 @@
   }
 
   // Builds resolve(text) -> canonical key, or null if `text` isn't a known
-  // champion. Accepts display names, Data Dragon ids and slugs
-  // ("Kai'Sa", "MonkeyKing", "velkoz"). Numeric ids only with { numeric: true },
-  // since bare numbers are ambiguous on most pages.
+  // champion. Accepts display names, Data Dragon ids, slugs and aliases
+  // ("Kai'Sa", "MonkeyKing", "velkoz", "renata").
   function createResolver(catalog) {
     const byText = new Map();
-    const byNum = new Map();
     for (const c of catalog) {
       byText.set(c.key, c.key);
       byText.set(championKey(c.id), c.key);
-      if (c.num) byNum.set(String(c.num), c.key);
     }
-    for (const [alias, key] of Object.entries(ALIASES)) {
-      const canonical = byText.get(key);
-      if (canonical) byText.set(alias, canonical);
-    }
-
-    return function resolve(text, { numeric = false } = {}) {
-      if (text == null) return null;
-      const raw = String(text).trim();
-      return numeric && /^\d+$/.test(raw) ? byNum.get(raw) || null : byText.get(championKey(raw)) || null;
-    };
+    return (text) => byText.get(championKey(text)) ?? null;
   }
 
   CPF.champions = { normalize, championKey, loadCatalog, createResolver };

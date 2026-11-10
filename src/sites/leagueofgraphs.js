@@ -17,18 +17,6 @@
   CPF.sites.register({
     id: "leagueofgraphs",
     name: "League of Graphs",
-
-    matches(url) {
-      return CPF.sites.hostIs(url, "leagueofgraphs.com") && PAGE.test(url.pathname);
-    },
-
-    findRows(root) {
-      const rows = [];
-      for (const a of root.querySelectorAll(ROWS)) {
-        const m = VS.exec(a.getAttribute("href"));
-        if (m) rows.push({ element: a, champion: decodeURIComponent(m[1]) });
-      }
-      return rows;
-    },
+    ...CPF.sites.pages("leagueofgraphs.com", [[PAGE, (root) => CPF.sites.linkRows(root, ROWS, VS)]]),
   });
 })(CPF);

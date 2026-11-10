@@ -10,50 +10,58 @@
 
   let settings = null;
   let resolve = null;
+  let pool = new Set();
   let isScheduled = false;
   let observer = null;
-  let isApplying = false;
+  // Elements filtered by the last run -> the class they got. Each run only touches rows whose state changed.
+  let marked = new Map();
 
-  function clear() {
-    for (const el of document.querySelectorAll(`.${HIDDEN}, .${DIMMED}`)) el.classList.remove(HIDDEN, DIMMED);
+  // Element -> class for every row on the page that should be hidden or dimmed right now.
+  function targets() {
+    const url = new URL(location.href);
+    const adapter = CPF.sites.forUrl(url);
+    const next = new Map();
+    if (!adapter || !settings.enabled || settings.sites[adapter.id] === false || pool.size === 0) return next;
+
+    const cls = settings.mode === "dim" ? DIMMED : HIDDEN;
+    try {
+      const rows = adapter.findRows(document, { url });
+      for (const row of rows) {
+        // Fall back to plain normalization if the catalog couldn't be loaded.
+        const key = resolve(row.champion) || CPF.champions.championKey(row.champion);
+        if (!pool.has(key)) next.set(row.element, cls);
+      }
+    } catch (error) {
+      console.warn(`[CPF] ${adapter.id} adapter failed`, error);
+      next.clear();
+    }
+    return next;
   }
 
   function apply() {
     isScheduled = false;
-    if (!settings) return;
-
-    const url = new URL(location.href);
-    const adapter = CPF.sites.forUrl(url);
-    isApplying = true;
-    try {
-      clear();
-      if (!adapter || !settings.enabled || settings.sites[adapter.id] === false || settings.pool.length === 0) {
-        return;
-      }
-
-      const pool = new Set(settings.pool);
-      const cls = settings.mode === "dim" ? DIMMED : HIDDEN;
-      const rows = adapter.findRows(document, { url, resolve });
-      for (const row of rows) {
-        // Fall back to plain normalization if the catalog couldn't be loaded.
-        const key = resolve(row.champion) || CPF.champions.championKey(row.champion);
-        row.inPool = pool.has(key);
-        if (!row.inPool) row.element.classList.add(cls);
-      }
-      if (adapter.afterFilter) adapter.afterFilter(rows, settings);
-    } catch (error) {
-      console.warn(`[CPF] ${adapter && adapter.id} adapter failed`, error);
-    } finally {
-      // Drop the mutation records caused by our own class changes.
-      if (observer) observer.takeRecords();
-      isApplying = false;
+    const next = targets();
+    for (const [el, cls] of marked) {
+      if (next.get(el) !== cls) el.classList.remove(cls);
     }
+    // Checked against the element itself, not `marked`: a site re-render may have reset its class attribute.
+    for (const [el, cls] of next) {
+      if (!el.classList.contains(cls)) el.classList.add(cls);
+    }
+    marked = next;
+    // Drop the mutation records caused by our own class changes.
+    observer.takeRecords();
   }
 
   function schedule() {
-    if (isScheduled || isApplying) return;
+    if (isScheduled) return;
     isScheduled = true;
     setTimeout(apply, DEBOUNCE_MS);
+  }
+
+  function useSettings(next) {
+    settings = next;
+    pool = new Set(settings.pool);
   }
 
   function watchDom() {
@@ -66,10 +74,7 @@
     // world, so poll the URL cheaply).
     let last = location.href;
     setInterval(() => {
-      if (location.href === last) {
-        return;
-      }
-
+      if (location.href === last) return;
       last = location.href;
       schedule();
     }, 500);
@@ -78,12 +83,15 @@
 
   async function init() {
     const [loaded, catalog] = await Promise.all([CPF.settings.get(), CPF.champions.loadCatalog()]);
-    settings = loaded;
+    useSettings(loaded);
     resolve = CPF.champions.createResolver(catalog);
     CPF.settings.onChange((next) => {
-      settings = next;
+      useSettings(next);
       schedule();
     });
+    // Classes left on the page by a previous instance (e.g. the extension was reloaded) get cleared by the first run.
+    for (const el of document.querySelectorAll(`.${HIDDEN}`)) marked.set(el, HIDDEN);
+    for (const el of document.querySelectorAll(`.${DIMMED}`)) marked.set(el, DIMMED);
     watchDom();
     watchNavigation();
     apply();

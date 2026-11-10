@@ -22,14 +22,7 @@
   const TILE = /\/lol\/champions\/([^/?#]+)\/build\/?$/i;
   const COUNTER_BOXES = 2; // Weak Against, Strong Against
 
-  function counterRows(root) {
-    const rows = [];
-    for (const a of root.querySelectorAll('a[href*="/counters/"][href*="/vs-"]:has(> div)')) {
-      const m = VS.exec(a.getAttribute("href"));
-      if (m) rows.push({ element: a, champion: decodeURIComponent(m[1]) });
-    }
-    return rows;
-  }
+  const counterRows = (root) => CPF.sites.linkRows(root, 'a[href*="/counters/"][href*="/vs-"]:has(> div)', VS);
 
   // The overview group: the parent of the boxes whose header links to the counters page.
   function overviewBoxes(root) {
@@ -38,29 +31,15 @@
     return group ? [...group.children].slice(0, COUNTER_BOXES) : [];
   }
 
-  function buildRows(root) {
-    const rows = [];
-    for (const box of overviewBoxes(root)) {
-      for (const a of box.querySelectorAll(":scope > div > a[href]")) {
-        const m = TILE.exec(a.getAttribute("href"));
-        if (m) rows.push({ element: a, champion: decodeURIComponent(m[1]) });
-      }
-    }
-    return rows;
-  }
+  const buildRows = (root) =>
+    overviewBoxes(root).flatMap((box) => CPF.sites.linkRows(box, ":scope > div > a[href]", TILE));
 
   CPF.sites.register({
     id: "mobalytics",
     name: "Mobalytics",
-
-    matches(url) {
-      return (
-        CPF.sites.hostIs(url, "mobalytics.gg") && (COUNTERS_PAGE.test(url.pathname) || BUILD_PAGE.test(url.pathname))
-      );
-    },
-
-    findRows(root, ctx) {
-      return BUILD_PAGE.test(ctx.url.pathname) ? buildRows(root) : counterRows(root);
-    },
+    ...CPF.sites.pages("mobalytics.gg", [
+      [BUILD_PAGE, buildRows],
+      [COUNTERS_PAGE, counterRows],
+    ]),
   });
 })(CPF);

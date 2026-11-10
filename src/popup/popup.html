@@ -47,19 +47,7 @@
       <ul id="sites"></ul>
     </section>
 
-    <!-- Same load order as the content scripts; add new site adapters here too. -->
-    <script src="../core/namespace.js"></script>
-    <script src="../core/champions.js"></script>
-    <script src="../core/settings.js"></script>
-    <script src="../sites/registry.js"></script>
-    <script src="../sites/ugg.js"></script>
-    <script src="../sites/blitz.js"></script>
-    <script src="../sites/counterstats.js"></script>
-    <script src="../sites/lolalytics.js"></script>
-    <script src="../sites/dpm.js"></script>
-    <script src="../sites/opgg.js"></script>
-    <script src="../sites/mobalytics.js"></script>
-    <script src="../sites/leagueofgraphs.js"></script>
-    <script src="popup.js"></script>
+    <!-- Loads the core + site adapter scripts listed in manifest.json, then popup.js. -->
+    <script src="load.js"></script>
   </body>
 </html>

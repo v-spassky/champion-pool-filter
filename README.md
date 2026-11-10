@@ -76,10 +76,10 @@ docs/                   README images (not packaged)
    `<img alt>` works too).
 3. Create `src/sites/<site>.js` calling `CPF.sites.register({ id, name, matches, findRows })` (see the interface in
    `src/sites/registry.js`). `findRows` just returns `{ element, champion }` pairs — the engine handles everything else.
+   `CPF.sites.pages()` and `CPF.sites.linkRows()` cover the common cases; see the existing adapters.
 4. In `manifest.json`, add the site's domain to `host_permissions` and `content_scripts.matches`, and the file to `js`
-   (after `registry.js`, before `filter.js`).
-5. Add a `<script>` tag for it in `src/popup/popup.html` so it appears in the Sites list.
-6. If the site spells a champion unusually, add an entry to `ALIASES` in `src/core/champions.js`.
+   (after `registry.js`, before `filter.js`). The popup loads the same list, so the site appears in its Sites list.
+5. If the site spells a champion unusually, add an entry to `ALIASES` in `src/core/champions.js`.
 
 ## Development
 

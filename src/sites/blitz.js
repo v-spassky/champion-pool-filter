@@ -6,23 +6,19 @@
 //     <tr><td data-sort-key="name"><a href="/lol/champions/Swain/build?"><img alt="Swain"> <span>Swain</span></a></td>...</tr>
 // The summary sentence above the tables also links champions; it's left alone.
 (function (CPF) {
+  const PAGE = /^\/lol\/champions\/[^/]+\/counters/i;
+
+  function findRows(root) {
+    return Array.from(root.querySelectorAll(':scope tbody[data-testid^="counters-"] tr'), (tr) => {
+      const cell = tr.querySelector(':scope > [data-sort-key="name"]') || tr;
+      const name = cell.querySelector(":scope img[alt]")?.getAttribute("alt") || cell.textContent;
+      return { element: tr, champion: name };
+    });
+  }
+
   CPF.sites.register({
     id: "blitz",
     name: "Blitz",
-
-    matches(url) {
-      return CPF.sites.hostIs(url, "blitz.gg") && /^\/lol\/champions\/[^/]+\/counters/i.test(url.pathname);
-    },
-
-    findRows(root) {
-      const rows = [];
-      for (const tr of root.querySelectorAll(':scope tbody[data-testid^="counters-"] tr')) {
-        const cell = tr.querySelector(':scope > [data-sort-key="name"]') || tr;
-        const img = cell.querySelector(":scope img[alt]");
-        const name = (img && img.getAttribute("alt")) || cell.textContent;
-        rows.push({ element: tr, champion: name });
-      }
-      return rows;
-    },
+    ...CPF.sites.pages("blitz.gg", [[PAGE, findRows]]),
   });
 })(CPF);

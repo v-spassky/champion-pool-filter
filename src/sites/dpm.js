@@ -21,14 +21,7 @@
   const TILE_LINKS = '[role="tabpanel"][id$="-content-Enemy"] a[href^="/champions/"]';
   const PICKER_NAMES = '[role="dialog"] img[alt] + span';
 
-  function buildRows(root) {
-    const rows = [];
-    for (const a of root.querySelectorAll(TILE_LINKS)) {
-      const m = LINK.exec(a.getAttribute("href") || "");
-      if (m && a.parentElement) rows.push({ element: a.parentElement, champion: decodeURIComponent(m[1]) });
-    }
-    return rows;
-  }
+  const buildRows = (root) => CPF.sites.linkRows(root, TILE_LINKS, LINK, (a) => a.parentElement);
 
   function isSearching(picker) {
     const search = picker.parentElement?.closest('[role="dialog"]')?.querySelector("input");
@@ -49,13 +42,9 @@
   CPF.sites.register({
     id: "dpm",
     name: "DPM.LOL",
-
-    matches(url) {
-      return CPF.sites.hostIs(url, "dpm.lol") && (BUILD_PAGE.test(url.pathname) || MATCHUP_PAGE.test(url.pathname));
-    },
-
-    findRows(root, ctx) {
-      return MATCHUP_PAGE.test(ctx.url.pathname) ? pickerRows(root) : buildRows(root);
-    },
+    ...CPF.sites.pages("dpm.lol", [
+      [MATCHUP_PAGE, pickerRows],
+      [BUILD_PAGE, buildRows],
+    ]),
   });
 })(CPF);

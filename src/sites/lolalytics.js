@@ -11,22 +11,11 @@
   const PAGE = /^(?:\/[a-z_]{2,6})?\/lol\/[^/]+\/counters\/?$/i;
   const VS = /\/lol\/[^/]+\/vs\/([^/]+)\//i;
 
+  const findRows = (root) => CPF.sites.linkRows(root, 'a[href*="/vs/"]:has(img)', VS, (a) => a.closest("span"));
+
   CPF.sites.register({
     id: "lolalytics",
     name: "Lolalytics",
-
-    matches(url) {
-      return CPF.sites.hostIs(url, "lolalytics.com") && PAGE.test(url.pathname);
-    },
-
-    findRows(root) {
-      const rows = [];
-      for (const a of root.querySelectorAll('a[href*="/vs/"]:has(img)')) {
-        const m = VS.exec(a.getAttribute("href"));
-        const card = a.closest("span");
-        if (m && card) rows.push({ element: card, champion: m[1] });
-      }
-      return rows;
-    },
+    ...CPF.sites.pages("lolalytics.com", [[PAGE, findRows]]),
   });
 })(CPF);

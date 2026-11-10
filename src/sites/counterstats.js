@@ -8,23 +8,18 @@
   const PAGE = /^\/league-of-legends\/([^/]+)\/?$/;
   const VS = /\/vs-([^/]+)/;
 
+  function findRows(root) {
+    const rows = [];
+    for (const a of root.querySelectorAll("a.champ-box__row")) {
+      const name = a.querySelector(".champion")?.textContent ?? VS.exec(a.getAttribute("href") || "")?.[1];
+      if (name) rows.push({ element: a, champion: name });
+    }
+    return rows;
+  }
+
   CPF.sites.register({
     id: "counterstats",
     name: "CounterStats",
-
-    matches(url) {
-      return CPF.sites.hostIs(url, "counterstats.net") && PAGE.test(url.pathname);
-    },
-
-    findRows(root) {
-      const rows = [];
-      for (const a of root.querySelectorAll("a.champ-box__row")) {
-        const nameEl = a.querySelector(".champion");
-        const m = VS.exec(a.getAttribute("href") || "");
-        const name = nameEl ? nameEl.textContent : m && m[1];
-        if (name) rows.push({ element: a, champion: name });
-      }
-      return rows;
-    },
+    ...CPF.sites.pages("counterstats.net", [[PAGE, findRows]]),
   });
 })(CPF);

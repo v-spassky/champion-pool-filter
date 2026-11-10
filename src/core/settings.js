@@ -12,10 +12,11 @@
     sites: {},
   };
 
+  const withDefaults = (stored) => ({ ...DEFAULTS, ...stored });
+
   async function get() {
     const items = await chrome.storage.sync.get(KEY);
-    const stored = items[KEY] || {};
-    return { ...DEFAULTS, ...stored, sites: { ...DEFAULTS.sites, ...stored.sites } };
+    return withDefaults(items[KEY]);
   }
 
   async function update(patch) {
@@ -25,10 +26,10 @@
   }
 
   function onChange(callback) {
-    chrome.storage.onChanged.addListener(async (changes, area) => {
-      if (area === "sync" && Object.hasOwn(changes, KEY)) callback(await get());
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === "sync" && Object.hasOwn(changes, KEY)) callback(withDefaults(changes[KEY].newValue));
     });
   }
 
-  CPF.settings = { DEFAULTS, get, update, onChange };
+  CPF.settings = { get, update, onChange };
 })(CPF);
