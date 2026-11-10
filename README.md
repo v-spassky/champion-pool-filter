@@ -14,15 +14,15 @@ LoL stats sites.
 | Lolalytics       | `/lol/<champ>/counters/`                                | precise (`lolalytics.js`)        |
 | CounterStats     | `/league-of-legends/<champ>`                            | precise (`counterstats.js`)      |
 | DPM.LOL          | `/champions/<Champ>/build`, `/matchups` opponent picker | precise (`dpm.js`)               |
-| OP.GG            | `/lol/champions/<champ>/counters`                       | heuristic (`heuristic-sites.js`) |
-| Mobalytics       | `/lol/champions/<champ>/counters`                       | heuristic                        |
+| OP.GG            | `/lol/champions/<champ>/counters`, `/build`             | precise (`opgg.js`)              |
+| Mobalytics       | `/lol/champions/<champ>/counters`                       | heuristic (`heuristic-sites.js`) |
 | League of Graphs | `/champions/counters/<champ>`                           | heuristic                        |
 
 **Precise** adapters target the site's actual markup. **Heuristic** ones find champion portraits and lift each to its
 list row; they skip nav/menus/tooltips, groups smaller than 4, and anything listing (nearly) every champion (champion
 pickers). The heuristic was validated against the Blitz, Lolalytics and CounterStats pages, where it found exactly the
-same rows as the precise adapters. OP.GG, Mobalytics and League of Graphs block automated downloads, so they haven't
-been checked against their real pages — if one misbehaves, write a precise adapter for it.
+same rows as the precise adapters. Mobalytics and League of Graphs block automated downloads, so they haven't been
+checked against their real pages — if one misbehaves, write a precise adapter for it.
 
 ## Install
 

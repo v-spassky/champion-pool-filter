@@ -61,6 +61,7 @@
         "src/sites/counterstats.js",
         "src/sites/lolalytics.js",
         "src/sites/dpm.js",
+        "src/sites/opgg.js",
         "src/sites/heuristic-sites.js",
         "src/content/filter.js"
       ],

@@ -10,13 +10,6 @@
 
   const HEURISTIC_SITES = [
     {
-      id: "opgg",
-      name: "OP.GG",
-      domain: "op.gg",
-      // /lol/champions/nami/counters, optionally with a locale prefix (/ko/lol/...)
-      page: /^(?:\/[a-z_-]{2,8})?\/lol\/champions\/([^/]+)\/counters/i,
-    },
-    {
       id: "mobalytics",
       name: "Mobalytics",
       domain: "mobalytics.gg",
