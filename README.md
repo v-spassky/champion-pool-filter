@@ -7,22 +7,19 @@ LoL stats sites.
 
 ## Supported sites
 
-| Site             | Pages                                                   | Adapter                          |
-| ---------------- | ------------------------------------------------------- | -------------------------------- |
-| u.gg             | `/lol/champions/<champ>/counter`                        | precise (`ugg.js`)               |
-| Blitz            | `/lol/champions/<champ>/counters`                       | precise (`blitz.js`)             |
-| Lolalytics       | `/lol/<champ>/counters/`                                | precise (`lolalytics.js`)        |
-| CounterStats     | `/league-of-legends/<champ>`                            | precise (`counterstats.js`)      |
-| DPM.LOL          | `/champions/<Champ>/build`, `/matchups` opponent picker | precise (`dpm.js`)               |
-| OP.GG            | `/lol/champions/<champ>/counters`, `/build`             | precise (`opgg.js`)              |
-| Mobalytics       | `/lol/champions/<champ>/counters`                       | heuristic (`heuristic-sites.js`) |
-| League of Graphs | `/champions/counters/<champ>`                           | heuristic                        |
+| Site             | Pages with filtered lists                                                |
+| ---------------- | ------------------------------------------------------------------------ |
+| u.gg             | `/lol/champions/<champ>/counter`                                         |
+| Blitz            | `/lol/champions/<champ>/counters`                                        |
+| Lolalytics       | `/lol/<champ>/counters/`                                                 |
+| CounterStats     | `/league-of-legends/<champ>`                                             |
+| DPM.LOL          | `/champions/<Champ>/build` (matchups box), `/matchups` (opponent picker) |
+| OP.GG            | `/lol/champions/<champ>/counters`, `/build` (counters box)               |
+| Mobalytics       | `/lol/champions/<champ>/counters`, `/build` (weak/strong against boxes)  |
+| League of Graphs | `/champions/counters/<champ>`, champion overview (counters box)          |
 
-**Precise** adapters target the site's actual markup. **Heuristic** ones find champion portraits and lift each to its
-list row; they skip nav/menus/tooltips, groups smaller than 4, and anything listing (nearly) every champion (champion
-pickers). The heuristic was validated against the Blitz, Lolalytics and CounterStats pages, where it found exactly the
-same rows as the precise adapters. Mobalytics and League of Graphs block automated downloads, so they haven't been
-checked against their real pages — if one misbehaves, write a precise adapter for it.
+Every adapter targets the site's actual markup, worked out from saved copies of its pages, and reads the champion from a
+link or a portrait's `alt` text. Synergy / duo-partner lists are never filtered, since they list allies.
 
 ## Install
 
@@ -55,8 +52,8 @@ Settings live in `chrome.storage.sync`; pages update live when you change them.
 src/core/namespace.js   shared global (content scripts can't use ES modules)
 src/core/champions.js   name normalization + aliases, champion catalog from Riot Data Dragon
 src/core/settings.js    settings storage
-src/sites/registry.js   adapter registry, interface docs, shared helpers (heuristic finder)
-src/sites/*.js          one adapter per site; heuristic-sites.js holds the heuristic ones
+src/sites/registry.js   adapter registry + interface docs
+src/sites/*.js          one adapter per site
 src/content/filter.js   site-agnostic engine (applies filter, watches DOM / SPA navigation)
 src/popup/              settings UI
 icons/                  extension icons (16/32/48/128 px)
@@ -65,17 +62,24 @@ docs/                   README images (not packaged)
 
 ## Adding a new site
 
-**Quickest:** add an entry (`id`, `name`, `domain`, `page` regex) to `HEURISTIC_SITES` in
-`src/sites/heuristic-sites.js`, then do steps 2–3 below.
-
-**Precise:**
-
-1. Create `src/sites/<site>.js` calling `CPF.sites.register({ id, name, matches, findRows })` (see the interface in
+1. Save a counter page with its list fully loaded: scroll through it, then run this in the DevTools console (it saves
+   the rendered page to Downloads, including content added by JavaScript that **Ctrl+S** may miss):
+   ```js
+   const a = document.createElement("a");
+   a.href = URL.createObjectURL(new Blob([document.documentElement.outerHTML], { type: "text/html" }));
+   a.download = "page.html";
+   a.click();
+   ```
+   For lists that only exist while a dropdown is open, wrap it in `setTimeout(() => { ... }, 5000)` and open the
+   dropdown during the delay.
+2. In the saved page, find one row and where the champion can be read from (a link like `/vs-<champ>` is best; an
+   `<img alt>` works too).
+3. Create `src/sites/<site>.js` calling `CPF.sites.register({ id, name, matches, findRows })` (see the interface in
    `src/sites/registry.js`). `findRows` just returns `{ element, champion }` pairs — the engine handles everything else.
-2. In `manifest.json`, add the site's domain to `content_scripts.matches` and the file to `js` (after `registry.js`,
-   before `filter.js`).
-3. Add a `<script>` tag for it in `src/popup/popup.html` so it appears in the Sites list.
-4. If the site spells a champion unusually, add an entry to `ALIASES` in `src/core/champions.js`.
+4. In `manifest.json`, add the site's domain to `host_permissions` and `content_scripts.matches`, and the file to `js`
+   (after `registry.js`, before `filter.js`).
+5. Add a `<script>` tag for it in `src/popup/popup.html` so it appears in the Sites list.
+6. If the site spells a champion unusually, add an entry to `ALIASES` in `src/core/champions.js`.
 
 ## Development
 

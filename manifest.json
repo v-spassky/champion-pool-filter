@@ -62,7 +62,8 @@
         "src/sites/lolalytics.js",
         "src/sites/dpm.js",
         "src/sites/opgg.js",
-        "src/sites/heuristic-sites.js",
+        "src/sites/mobalytics.js",
+        "src/sites/leagueofgraphs.js",
         "src/content/filter.js"
       ],
       "css": ["src/content/filter.css"],

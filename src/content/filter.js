@@ -10,7 +10,6 @@
 
   let settings = null;
   let resolve = null;
-  let championCount = 0;
   let isScheduled = false;
   let observer = null;
   let isApplying = false;
@@ -34,7 +33,7 @@
 
       const pool = new Set(settings.pool);
       const cls = settings.mode === "dim" ? DIMMED : HIDDEN;
-      const rows = adapter.findRows(document, { url, resolve, championCount });
+      const rows = adapter.findRows(document, { url, resolve });
       for (const row of rows) {
         // Fall back to plain normalization if the catalog couldn't be loaded.
         const key = resolve(row.champion) || CPF.champions.championKey(row.champion);
@@ -81,7 +80,6 @@
     const [loaded, catalog] = await Promise.all([CPF.settings.get(), CPF.champions.loadCatalog()]);
     settings = loaded;
     resolve = CPF.champions.createResolver(catalog);
-    championCount = catalog.length;
     CPF.settings.onChange((next) => {
       settings = next;
       schedule();
