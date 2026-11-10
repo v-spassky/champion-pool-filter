@@ -5,15 +5,16 @@ LoL stats sites.
 
 ## Supported sites
 
-| Site             | Pages                             | Adapter                          |
-| ---------------- | --------------------------------- | -------------------------------- |
-| u.gg             | `/lol/champions/<champ>/counter`  | precise (`ugg.js`)               |
-| Blitz            | `/lol/champions/<champ>/counters` | precise (`blitz.js`)             |
-| Lolalytics       | `/lol/<champ>/counters/`          | precise (`lolalytics.js`)        |
-| CounterStats     | `/league-of-legends/<champ>`      | precise (`counterstats.js`)      |
-| OP.GG            | `/lol/champions/<champ>/counters` | heuristic (`heuristic-sites.js`) |
-| Mobalytics       | `/lol/champions/<champ>/counters` | heuristic                        |
-| League of Graphs | `/champions/counters/<champ>`     | heuristic                        |
+| Site             | Pages                                                   | Adapter                          |
+| ---------------- | ------------------------------------------------------- | -------------------------------- |
+| u.gg             | `/lol/champions/<champ>/counter`                        | precise (`ugg.js`)               |
+| Blitz            | `/lol/champions/<champ>/counters`                       | precise (`blitz.js`)             |
+| Lolalytics       | `/lol/<champ>/counters/`                                | precise (`lolalytics.js`)        |
+| CounterStats     | `/league-of-legends/<champ>`                            | precise (`counterstats.js`)      |
+| DPM.LOL          | `/champions/<Champ>/build`, `/matchups` opponent picker | precise (`dpm.js`)               |
+| OP.GG            | `/lol/champions/<champ>/counters`                       | heuristic (`heuristic-sites.js`) |
+| Mobalytics       | `/lol/champions/<champ>/counters`                       | heuristic                        |
+| League of Graphs | `/champions/counters/<champ>`                           | heuristic                        |
 
 **Precise** adapters target the site's actual markup. **Heuristic** ones find champion portraits and lift each to its
 list row; they skip nav/menus/tooltips, groups smaller than 4, and anything listing (nearly) every champion (champion

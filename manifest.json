@@ -20,7 +20,8 @@
     "https://lolalytics.com/*",
     "https://blitz.gg/*",
     "https://www.leagueofgraphs.com/*",
-    "https://www.counterstats.net/*"
+    "https://www.counterstats.net/*",
+    "https://dpm.lol/*"
   ],
   "icons": {
     "16": "icons/icon16.png",
@@ -47,7 +48,8 @@
         "https://lolalytics.com/*",
         "https://blitz.gg/*",
         "https://www.leagueofgraphs.com/*",
-        "https://www.counterstats.net/*"
+        "https://www.counterstats.net/*",
+        "https://dpm.lol/*"
       ],
       "js": [
         "src/core/namespace.js",
@@ -58,6 +60,7 @@
         "src/sites/blitz.js",
         "src/sites/counterstats.js",
         "src/sites/lolalytics.js",
+        "src/sites/dpm.js",
         "src/sites/heuristic-sites.js",
         "src/content/filter.js"
       ],
