@@ -60,7 +60,7 @@ export default [
       "prefer-template": "error",
 
       // unicorn: keep strict, but drop rules that fight this codebase's constraints.
-      // Short conventional names (el, url, ctx) are clearer than forced long ones; it also demands
+      // Short conventional names (el, url, cls) are clearer than forced long ones; it also demands
       // renaming files that tools look up by name (web-ext-config.mjs).
       "unicorn/name-replacements": "off",
       // DOM APIs and adapter contracts use null for "not found".
@@ -90,9 +90,9 @@ export default [
     },
   },
 
-  // Tooling config files (Node, ES modules).
+  // Tooling config files and dev scripts (Node, ES modules).
   {
-    files: ["*.js", "*.mjs"],
+    files: ["*.js", "*.mjs", "scripts/**/*.mjs"],
     languageOptions: {
       ecmaVersion: 2024,
       sourceType: "module",

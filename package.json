@@ -9,9 +9,10 @@
     "node": ">=22"
   },
   "scripts": {
-    "lint": "npm run lint:js && npm run lint:format && npm run lint:ext",
+    "lint": "npm run lint:js && npm run lint:format && npm run lint:manifest && npm run lint:ext",
     "lint:js": "eslint --max-warnings=0 .",
     "lint:format": "prettier --check .",
+    "lint:manifest": "node scripts/check-manifest.mjs",
     "lint:ext": "web-ext lint --source-dir . --warnings-as-errors",
     "fix": "eslint --fix . && prettier --write ."
   },

@@ -2,8 +2,8 @@
 (function (CPF) {
   // Different sites spell champions differently ("Kai'Sa", "kaisa", "KaiSa",
   // "Nunu & Willump", "nunu"). Everything is compared via this canonical key.
-  function normalize(name = "") {
-    return String(name ?? "")
+  function normalize(name) {
+    return name
       .toLowerCase()
       .normalize("NFD")
       .replaceAll(/[̀-ͯ]/g, "")
@@ -65,16 +65,18 @@
     }
   }
 
-  // Builds resolve(text) -> canonical key, or null if `text` isn't a known
-  // champion. Accepts display names, Data Dragon ids, slugs and aliases
-  // ("Kai'Sa", "MonkeyKing", "velkoz", "renata").
+  // Builds resolve(text) -> canonical champion key. Accepts display names, Data Dragon ids, slugs and aliases
+  // ("Kai'Sa", "MonkeyKing", "velkoz", "renata"). Text the catalog doesn't know (or an empty catalog, when it
+  // couldn't be loaded) resolves to its normalized form, which is how the popup stores typed names in that case.
   function createResolver(catalog) {
     const byText = new Map();
     for (const c of catalog) {
-      byText.set(c.key, c.key);
       byText.set(championKey(c.id), c.key);
     }
-    return (text) => byText.get(championKey(text)) ?? null;
+    return (text) => {
+      const key = championKey(text);
+      return byText.get(key) ?? key;
+    };
   }
 
   CPF.champions = { normalize, championKey, loadCatalog, createResolver };

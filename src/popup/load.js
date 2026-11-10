@@ -1,8 +1,8 @@
-// Loads the scripts the content script uses (core + site adapters, minus the page engine) in manifest order, then
-// popup.js, so adding a site never needs a second script list here. async=false keeps them running in order.
+// Loads the shared scripts the content script uses (core + site adapters; not src/content/, which runs on the stats
+// pages) in manifest order, then popup.js, so the popup never keeps its own list. async=false keeps them in order.
 {
   const { js } = chrome.runtime.getManifest().content_scripts[0];
-  const files = [...js.filter((file) => !file.endsWith("/filter.js")).map((file) => `/${file}`), "popup.js"];
+  const files = [...js.filter((file) => !file.startsWith("src/content/")).map((file) => `/${file}`), "popup.js"];
   for (const file of files) {
     const script = document.createElement("script");
     script.src = file;

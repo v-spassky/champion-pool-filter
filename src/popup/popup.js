@@ -91,7 +91,7 @@
       const label = document.createElement("label");
       const cb = document.createElement("input");
       cb.type = "checkbox";
-      cb.checked = settings.sites[site.id] !== false;
+      cb.checked = CPF.settings.isSiteEnabled(settings, site.id);
       cb.addEventListener("change", () => save({ sites: { ...settings.sites, [site.id]: cb.checked } }));
       label.append(cb, site.name);
       li.append(label);
@@ -153,25 +153,6 @@
     }
   });
 
-  // Site access. Browsers (Firefox especially) may withhold host permissions until the user grants them;
-  // without them the content scripts never run. The origins come from the manifest so they can't drift.
-  const SITE_ORIGINS = chrome.runtime.getManifest().content_scripts.flatMap((script) => script.matches);
-
-  async function renderAccess() {
-    const hasAccess = await chrome.permissions.contains({ origins: SITE_ORIGINS });
-    $("access").hidden = hasAccess;
-  }
-
-  $("grant").addEventListener("click", async () => {
-    // Must be the first call in the click handler: browsers only allow permission prompts during a user gesture.
-    const granted = await chrome.permissions.request({ origins: SITE_ORIGINS });
-    $("granted").hidden = !granted;
-    await renderAccess();
-  });
-  chrome.permissions.onAdded.addListener(renderAccess);
-  chrome.permissions.onRemoved.addListener(renderAccess);
-
   render();
-  await renderAccess();
   search.focus();
 })();

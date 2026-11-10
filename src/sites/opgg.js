@@ -23,7 +23,7 @@
     }));
   }
 
-  const buildRows = (root) => CPF.sites.linkRows(root, MATCHUP_LINKS, TARGET, (a) => a.closest("li") || a);
+  const buildRows = (root) => CPF.sites.linkRows(root, MATCHUP_LINKS, TARGET, (a) => a.closest("li"));
 
   CPF.sites.register({
     id: "opgg",

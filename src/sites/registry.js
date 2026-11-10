@@ -1,21 +1,13 @@
-// Site adapter registry + small helpers for writing adapters.
-//
-// To support a new stats website:
-//   1. Save a counter page with the list fully loaded (see "Adding a new site" in the README) and find the markup
-//      of one row and where the champion's name or slug can be read from (a link is best, an <img alt> works too).
-//   2. Create src/sites/<site>.js and call CPF.sites.register({...}) with the adapter interface below.
-//   3. In manifest.json add the site's domain to "host_permissions" and "content_scripts.matches" (match the whole
-//      domain, not just counter pages, so SPA navigation into a counter page is caught) and the file to the "js"
-//      list (after registry.js, before filter.js). The popup loads the same list, so the site shows up there too.
+// Site adapter registry + small helpers for writing adapters. To support a new site, follow "Adding a new site" in
+// the README; `npm run lint` checks the manifest side of it.
 //
 // Adapter interface:
 //   id:        string                 unique, stable id (used in settings)
 //   name:      string                 human-readable label shown in the popup
 //   matches(url: URL): boolean        true if the page has counter lists to filter
-//   findRows(root: ParentNode, ctx): Array<{ element: HTMLElement, champion: string }>
+//   findRows(root: ParentNode, url: URL): Array<{ element: HTMLElement, champion: string }>
 //                                     every champion entry that may be filtered; `element` is what gets hidden or
 //                                     dimmed and `champion` is any name/slug/id the site uses.
-//       ctx.url      URL of the page
 // Most adapters get matches/findRows from pages() and build rows with linkRows().
 (function (CPF) {
   const adapters = [];
@@ -42,7 +34,7 @@
     const pick = (url) => (hostIs(url, domain) ? list.find(([path]) => path.test(url.pathname)) : undefined);
     return {
       matches: (url) => pick(url) !== undefined,
-      findRows: (root, ctx) => pick(ctx.url)[1](root, ctx),
+      findRows: (root, url) => pick(url)[1](root),
     };
   }
 

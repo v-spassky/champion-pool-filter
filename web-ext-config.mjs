@@ -1,12 +1,5 @@
-// web-ext settings (lint/build/sign). Keeps dev tooling out of the packaged extension.
+// web-ext settings (lint/build/sign). Only the extension itself ships: the manifest, icons and src/. Everything else
+// in the repo (tooling, docs, scripts) stays out without having to be listed here.
 export default {
-  ignoreFiles: [
-    "package.json",
-    "package-lock.json",
-    "eslint.config.js",
-    "prettier.config.js",
-    "web-ext-config.mjs",
-    "README.md",
-    "docs",
-  ],
+  ignoreFiles: ["**", "!manifest.json", "!icons", "!icons/**", "!src", "!src/**"],
 };

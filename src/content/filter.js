@@ -12,7 +12,6 @@
   let resolve = null;
   let pool = new Set();
   let isScheduled = false;
-  let observer = null;
   // Elements filtered by the last run -> the class they got. Each run only touches rows whose state changed.
   let marked = new Map();
 
@@ -21,15 +20,14 @@
     const url = new URL(location.href);
     const adapter = CPF.sites.forUrl(url);
     const next = new Map();
-    if (!adapter || !settings.enabled || settings.sites[adapter.id] === false || pool.size === 0) return next;
+    const isOn = adapter && settings.enabled && CPF.settings.isSiteEnabled(settings, adapter.id) && pool.size > 0;
+    if (!isOn) return next;
 
     const cls = settings.mode === "dim" ? DIMMED : HIDDEN;
     try {
-      const rows = adapter.findRows(document, { url });
+      const rows = adapter.findRows(document, url);
       for (const row of rows) {
-        // Fall back to plain normalization if the catalog couldn't be loaded.
-        const key = resolve(row.champion) || CPF.champions.championKey(row.champion);
-        if (!pool.has(key)) next.set(row.element, cls);
+        if (!pool.has(resolve(row.champion))) next.set(row.element, cls);
       }
     } catch (error) {
       console.warn(`[CPF] ${adapter.id} adapter failed`, error);
@@ -49,8 +47,6 @@
       if (!el.classList.contains(cls)) el.classList.add(cls);
     }
     marked = next;
-    // Drop the mutation records caused by our own class changes.
-    observer.takeRecords();
   }
 
   function schedule() {
@@ -65,8 +61,8 @@
   }
 
   function watchDom() {
-    observer = new MutationObserver(schedule);
-    observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+    // Class changes aren't watched (no `attributes`), so the engine's own edits don't retrigger it.
+    new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true, characterData: true });
   }
 
   function watchNavigation() {

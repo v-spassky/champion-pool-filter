@@ -23,6 +23,7 @@ jobs:
         check:
           - { name: ESLint, script: "lint:js" }
           - { name: Prettier, script: "lint:format" }
+          - { name: Manifest, script: "lint:manifest" }
           - { name: web-ext lint, script: "lint:ext" }
     steps:
       - uses: actions/checkout@v4

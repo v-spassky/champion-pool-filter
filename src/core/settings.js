@@ -8,9 +8,12 @@
     mode: "dim",
     // Canonical champion keys (see CPF.champions.championKey).
     pool: [],
-    // Per-site on/off switch, keyed by adapter id. Missing = enabled.
+    // Per-site on/off switch, keyed by adapter id; read it through isSiteEnabled().
     sites: {},
   };
+
+  // Sites are on unless the user switched them off (so newly added sites start enabled).
+  const isSiteEnabled = (settings, siteId) => settings.sites[siteId] !== false;
 
   const withDefaults = (stored) => ({ ...DEFAULTS, ...stored });
 
@@ -31,5 +34,5 @@
     });
   }
 
-  CPF.settings = { get, update, onChange };
+  CPF.settings = { get, update, onChange, isSiteEnabled };
 })(CPF);
