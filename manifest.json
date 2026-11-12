@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Champion Pool Filter",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Hides champions you don't play from counter lists on LoL stats sites.",
   "browser_specific_settings": {
     "gecko": {
