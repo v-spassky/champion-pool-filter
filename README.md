@@ -3,6 +3,9 @@
 Browser extension (Chrome / Edge / Firefox, Manifest V3) that hides champions outside your pool from counter lists on
 LoL stats sites.
 
+**[Install from the Chrome Web Store](https://chromewebstore.google.com/detail/champion-pool-filter/anhglmnblfcnbkfgihjniejjlhkbaknk)**
+(works in Chrome and Edge). The Firefox version is in review on addons.mozilla.org and coming soon.
+
 ![The extension popup: champion pool, Hide/Dim mode and per-site toggles](docs/popup.png)
 
 ## Supported sites
@@ -22,6 +25,12 @@ Every adapter targets the site's actual markup, worked out from saved copies of 
 link or a portrait's `alt` text. Synergy / duo-partner lists are never filtered, since they list allies.
 
 ## Install
+
+**Chrome / Edge:** install it from the
+[Chrome Web Store](https://chromewebstore.google.com/detail/champion-pool-filter/anhglmnblfcnbkfgihjniejjlhkbaknk), then
+click the extension icon and add the champions you play.
+
+### From source (Chrome / Edge)
 
 1. Open `chrome://extensions` (or `edge://extensions`), enable **Developer mode**.
 2. **Load unpacked** → select this folder.
