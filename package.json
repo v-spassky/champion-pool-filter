@@ -1,6 +1,6 @@
 {
   "name": "champion-pool-filter",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "description": "Browser extension that hides champions outside your pool from counter lists on LoL stats sites.",
   "license": "UNLICENSED",
