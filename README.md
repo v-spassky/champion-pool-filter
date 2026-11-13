@@ -4,9 +4,10 @@ Browser extension (Chrome / Edge / Firefox, Manifest V3) that hides champions ou
 LoL stats sites.
 
 **Install:**
-[Chrome Web Store](https://chromewebstore.google.com/detail/champion-pool-filter/anhglmnblfcnbkfgihjniejjlhkbaknk)
-(Chrome and Edge)
-[Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/champion-pool-filter/)
+
+- [Chrome Web Store](https://chromewebstore.google.com/detail/champion-pool-filter/anhglmnblfcnbkfgihjniejjlhkbaknk)
+  (Chrome and Edge)
+- [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/champion-pool-filter/)
 
 ![The extension popup: champion pool, Hide/Dim mode and per-site toggles](docs/popup.png)
 
