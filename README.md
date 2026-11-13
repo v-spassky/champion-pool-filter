@@ -3,8 +3,10 @@
 Browser extension (Chrome / Edge / Firefox, Manifest V3) that hides champions outside your pool from counter lists on
 LoL stats sites.
 
-**[Install from the Chrome Web Store](https://chromewebstore.google.com/detail/champion-pool-filter/anhglmnblfcnbkfgihjniejjlhkbaknk)**
-(works in Chrome and Edge). The Firefox version is in review on addons.mozilla.org and coming soon.
+**Install:**
+[Chrome Web Store](https://chromewebstore.google.com/detail/champion-pool-filter/anhglmnblfcnbkfgihjniejjlhkbaknk)
+(Chrome and Edge)
+[Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/champion-pool-filter/)
 
 ![The extension popup: champion pool, Hide/Dim mode and per-site toggles](docs/popup.png)
 
@@ -37,6 +39,11 @@ click the extension icon and add the champions you play.
 3. Click the extension icon, add the champions you play.
 
 ### Firefox (142+)
+
+Install it from [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/champion-pool-filter/), then click the
+extension icon and add the champions you play.
+
+From source:
 
 - **Quick test:** `about:debugging#/runtime/this-firefox` → **Load Temporary Add-on…** → pick `manifest.json`. It is
   removed when Firefox restarts.
